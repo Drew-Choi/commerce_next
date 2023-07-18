@@ -1,0 +1,49 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { Client } from '@notionhq/client';
+
+const notion = new Client({
+  auth: 'secret_6XBpJMiFDs9tyYi6uIxKwVTefOgigcsvCuRfuqsTZoN',
+});
+
+const dataBaseId = 'fec8a9c5e8fe4a0b8db04101d70d6535';
+
+const addItem = async (name: string) => {
+  try {
+    const response = await notion.pages.create({
+      parent: { database_id: dataBaseId },
+      properties: {
+        title: [
+          {
+            text: {
+              content: name,
+            },
+          },
+        ],
+      },
+    });
+    console.log(response);
+  } catch (err) {
+    console.error(JSON.stringify(err));
+  }
+};
+
+type Data = {
+  message: string;
+};
+
+const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { name } = req.query;
+
+  if (!name) {
+    return res.status(400).json({ message: 'No Name' });
+  }
+
+  try {
+    await addItem(String(name));
+    res.status(200).json({ message: `Success ${name} added` });
+  } catch (err) {
+    res.status(400).json({ message: `Fail to ${name} added` });
+  }
+};
+
+export default handler;
