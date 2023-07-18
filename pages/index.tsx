@@ -1,9 +1,50 @@
 import axios from 'axios';
 import { NextPage } from 'next';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+interface Propertis {
+  desc: {
+    rich_text: {
+      text: {
+        content: string;
+      };
+    }[];
+  };
+
+  name: {
+    title: {
+      text: {
+        content: string;
+      };
+    }[];
+  };
+
+  price: {
+    number: number;
+  };
+}
+
+interface Itmes {
+  id: string;
+  properties: Propertis;
+}
 
 const Home: NextPage = () => {
+  const [products, setProducts] = useState<Itmes[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const getItems = async () => {
+    try {
+      const response = await axios.get('/api/get-items');
+      setProducts(response.data.items);
+    } catch (err) {
+      console.error('getItem API요청요류:', err);
+    }
+  };
+
+  useEffect(() => {
+    getItems();
+  }, []);
 
   const handleClick = async () => {
     if (inputRef.current === null || inputRef.current.value === '') {
@@ -22,6 +63,8 @@ const Home: NextPage = () => {
     }
   };
 
+  console.log(products);
+
   return (
     <div>
       <h1>Welcom</h1>
@@ -32,6 +75,16 @@ const Home: NextPage = () => {
         placeholder="name"
       />
       <button onClick={handleClick}>Add</button>
+
+      <div>
+        <p>Product List</p>
+        {products &&
+          products.map((items) => (
+            <div key={items.id}>
+              {items.properties.name.title[0].text.content}
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
