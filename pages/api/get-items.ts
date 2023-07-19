@@ -1,16 +1,15 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { Client } from '@notionhq/client';
 
 const notion = new Client({
-  auth: 'secret_6XBpJMiFDs9tyYi6uIxKwVTefOgigcsvCuRfuqsTZoN',
+  auth: process.env.NOTION_SECRET,
 });
 
-const dataBaseId = 'fec8a9c5e8fe4a0b8db04101d70d6535';
+const dataBaseId = process.env.NOTION_ID;
 
-const getItems = async () => {
+export const getItems = async () => {
   try {
     const response = await notion.databases.query({
-      database_id: dataBaseId,
+      database_id: dataBaseId as string,
       sorts: [
         {
           property: 'price',
@@ -18,25 +17,24 @@ const getItems = async () => {
         },
       ],
     });
-    console.log(response);
-    return response;
+    return response?.results;
   } catch (err) {
-    console.error(JSON.stringify(err));
+    console.error('API요청오류: ', err);
   }
 };
 
-type Data = {
-  items?: any;
-  message: string;
-};
+// type Data = {
+//   items?: any;
+//   message: string;
+// };
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  try {
-    const response = await getItems();
-    res.status(200).json({ items: response?.results, message: 'Success' });
-  } catch (err) {
-    res.status(400).json({ message: 'Fail' });
-  }
-};
+// const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+//   try {
+//     const response = await getItems();
+//     res.status(200).json({ items: response?.results, message: 'Success' });
+//   } catch (err) {
+//     res.status(400).json({ message: 'Fail' });
+//   }
+// };
 
-export default handler;
+// export default handler;

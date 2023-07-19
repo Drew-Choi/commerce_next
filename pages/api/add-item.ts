@@ -2,15 +2,15 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { Client } from '@notionhq/client';
 
 const notion = new Client({
-  auth: 'secret_6XBpJMiFDs9tyYi6uIxKwVTefOgigcsvCuRfuqsTZoN',
+  auth: process.env.NOTION_SECRET,
 });
 
-const dataBaseId = 'fec8a9c5e8fe4a0b8db04101d70d6535';
+const dataBaseId = process.env.NOTION_ID;
 
 const addItem = async (name: string) => {
   try {
     const response = await notion.pages.create({
-      parent: { database_id: dataBaseId },
+      parent: { database_id: dataBaseId as string },
       properties: {
         title: [
           {
@@ -21,7 +21,6 @@ const addItem = async (name: string) => {
         ],
       },
     });
-    console.log(response);
   } catch (err) {
     console.error(JSON.stringify(err));
   }

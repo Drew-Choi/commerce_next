@@ -1,6 +1,9 @@
+import { css } from '@emotion/react';
 import axios from 'axios';
-import { NextPage } from 'next';
-import { useEffect, useRef, useState } from 'react';
+import { GetStaticProps, NextPage } from 'next';
+import { useRef } from 'react';
+import { getItems } from './api/get-items';
+import { useRouter } from 'next/router';
 
 interface Propertis {
   desc: {
@@ -24,27 +27,34 @@ interface Propertis {
   };
 }
 
-interface Itmes {
-  id: string;
-  properties: Propertis;
+interface ItmesProps {
+  items: {
+    id: string;
+    properties: Propertis;
+  }[];
 }
 
-const Home: NextPage = () => {
-  const [products, setProducts] = useState<Itmes[]>([]);
+export const getServerSideProps = async () => {
+  try {
+    console.log('server');
+
+    const items = await getItems();
+
+    return {
+      props: { items },
+    };
+  } catch (err) {
+    console.error('getItem API 요청 오류:', err);
+    return {
+      props: { items: [] },
+    };
+  }
+};
+
+const Home: NextPage<ItmesProps> = ({ items }) => {
+  const router = useRouter();
+
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const getItems = async () => {
-    try {
-      const response = await axios.get('/api/get-items');
-      setProducts(response.data.items);
-    } catch (err) {
-      console.error('getItem API요청요류:', err);
-    }
-  };
-
-  useEffect(() => {
-    getItems();
-  }, []);
 
   const handleClick = async () => {
     if (inputRef.current === null || inputRef.current.value === '') {
@@ -57,13 +67,12 @@ const Home: NextPage = () => {
         `/api/add-item?name=${inputRef.current.value}`,
       );
 
+      router.reload();
       alert(response.data.message);
     } catch (err) {
       console.error('API요청요류:', err);
     }
   };
-
-  console.log(products);
 
   return (
     <div>
@@ -74,14 +83,25 @@ const Home: NextPage = () => {
         ref={inputRef}
         placeholder="name"
       />
-      <button onClick={handleClick}>Add</button>
+      <button
+        css={css`
+          background-color: beige;
+          font-size: 20px;
+          :hover {
+            background-color: red;
+          }
+        `}
+        onClick={handleClick}
+      >
+        Add
+      </button>
 
       <div>
         <p>Product List</p>
-        {products &&
-          products.map((items) => (
-            <div key={items.id}>
-              {items.properties.name.title[0].text.content}
+        {items &&
+          items.map((item) => (
+            <div key={item.id}>
+              {item.properties.name.title[0].text.content}
             </div>
           ))}
       </div>
