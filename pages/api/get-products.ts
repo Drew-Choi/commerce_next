@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 export const getProducts = async () => {
   try {
     const response = await prisma.products.findMany();
-    console.log(response);
     return response;
   } catch (err) {
     console.error('API요청오류: ', err);

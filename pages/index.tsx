@@ -38,15 +38,24 @@ const prisma = new PrismaClient();
 
 interface Itme {
   name: string;
-  id: string;
+  id: number;
+  createdAt: string;
 }
 
 export const getServerSideProps = async () => {
   try {
     console.log('server');
     const items = await prisma.products.findMany();
+
+    const serializedItems = items.map((el) => ({
+      ...el,
+      createdAt: String(el.createdAt),
+    }));
+
+    console.log(serializedItems);
+
     return {
-      props: { items },
+      props: { items: serializedItems },
     };
   } catch (err) {
     console.error('getItem API 요청 오류:', err);
@@ -109,7 +118,12 @@ const Home: NextPage<{ items: Itme[] }> = ({ items }) => {
               {item.properties.name.title[0].text.content}
             </div>
           ))} */}
-        {items && items.map((item) => <div key={item.id}>{item.name}</div>)}
+        {items &&
+          items.map((item) => (
+            <>
+              <div key={item.id}>{item.name}</div> <span>{item.createdAt}</span>
+            </>
+          ))}
       </div>
     </div>
   );

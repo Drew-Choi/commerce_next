@@ -4,20 +4,20 @@ import Image from 'next/image';
 import Carousel from 'nuka-carousel';
 // import ImageGallery from 'react-image-gallery';
 
-// const images = [
-//   {
-//     original: 'https://picsum.photos/id/1018/1000/600/',
-//     thumbnail: 'https://picsum.photos/id/1018/250/150/',
-//   },
-//   {
-//     original: 'https://picsum.photos/id/1015/1000/600/',
-//     thumbnail: 'https://picsum.photos/id/1015/250/150/',
-//   },
-//   {
-//     original: 'https://picsum.photos/id/1019/1000/600/',
-//     thumbnail: 'https://picsum.photos/id/1019/250/150/',
-//   },
-// ];
+const images = [
+  {
+    original: 'https://picsum.photos/id/1018/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1018/250/150/',
+  },
+  {
+    original: 'https://picsum.photos/id/1015/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1015/250/150/',
+  },
+  {
+    original: 'https://picsum.photos/id/1019/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1019/250/150/',
+  },
+];
 
 const Products: NextPage = () => {
   // return <ImageGallery items={images} />;
@@ -43,7 +43,7 @@ const Products: NextPage = () => {
         />
       </Head>
       <Carousel>
-        {/* {images.map((item) => (
+        {images.map((item) => (
           <Image
             key={item.original}
             src={item.original}
@@ -52,7 +52,7 @@ const Products: NextPage = () => {
             height={600}
             layout="responsive"
           />
-        ))} */}
+        ))}
       </Carousel>
     </>
   );
