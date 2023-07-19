@@ -1,45 +1,50 @@
 import { css } from '@emotion/react';
 import axios from 'axios';
-import { GetStaticProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import { useRef } from 'react';
-import { getItems } from './api/get-items';
 import { useRouter } from 'next/router';
+import { PrismaClient } from '@prisma/client';
 
-interface Propertis {
-  desc: {
-    rich_text: {
-      text: {
-        content: string;
-      };
-    }[];
-  };
+const prisma = new PrismaClient();
 
-  name: {
-    title: {
-      text: {
-        content: string;
-      };
-    }[];
-  };
+// interface Propertis {
+//   desc: {
+//     rich_text: {
+//       text: {
+//         content: string;
+//       };
+//     }[];
+//   };
 
-  price: {
-    number: number;
-  };
-}
+//   name: {
+//     title: {
+//       text: {
+//         content: string;
+//       };
+//     }[];
+//   };
 
-interface ItmesProps {
-  items: {
-    id: string;
-    properties: Propertis;
-  }[];
+//   price: {
+//     number: number;
+//   };
+// }
+
+// interface ItmesProps {
+//   items: {
+//     id: string;
+//     properties: Propertis;
+//   }[];
+// }
+
+interface Itme {
+  name: string;
+  id: string;
 }
 
 export const getServerSideProps = async () => {
   try {
     console.log('server');
-
-    const items = await getItems();
-
+    const items = await prisma.products.findMany();
     return {
       props: { items },
     };
@@ -51,7 +56,7 @@ export const getServerSideProps = async () => {
   }
 };
 
-const Home: NextPage<ItmesProps> = ({ items }) => {
+const Home: NextPage<{ items: Itme[] }> = ({ items }) => {
   const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -98,12 +103,13 @@ const Home: NextPage<ItmesProps> = ({ items }) => {
 
       <div>
         <p>Product List</p>
-        {items &&
+        {/* {items &&
           items.map((item) => (
             <div key={item.id}>
               {item.properties.name.title[0].text.content}
             </div>
-          ))}
+          ))} */}
+        {items && items.map((item) => <div key={item.id}>{item.name}</div>)}
       </div>
     </div>
   );
