@@ -52,8 +52,6 @@ export const getServerSideProps = async () => {
       createdAt: String(el.createdAt),
     }));
 
-    console.log(serializedItems);
-
     return {
       props: { items: serializedItems },
     };

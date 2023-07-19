@@ -23,8 +23,9 @@
       "@/*": ["./*"]
     },
     // emotion 설정
-    "types": ["@emotion/react/types/css-prop"]
+    "types": ["@emotion/react/types/css-prop", "node"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "ts-node": {"compilerOptions": {"module": "CommonJS"}},
 }

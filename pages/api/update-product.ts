@@ -13,7 +13,6 @@ export const updateProduct = async (id: number, contents: string) => {
         contents: contents,
       },
     });
-    console.log(response);
     return response;
   } catch (err) {
     console.error('API요청오류: ', err);
@@ -27,7 +26,7 @@ type Data = {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { id, contents } = req.body;
-  if (!id && !contents) {
+  if (!id || !contents) {
     res.status(400).json({ message: 'No ID & Contents' });
     return;
   }
