@@ -1,7 +1,8 @@
-import CustomEditor from '@/components/Editor';
+import { css } from '@emotion/react';
 import axios from 'axios';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import { NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -15,6 +16,10 @@ const Edit: NextPage = () => {
     undefined,
   );
 
+  const CustomEditor = dynamic(() => import('@/components/Editor'), {
+    loading: () => <div>Loading...</div>,
+  });
+
   useEffect(() => {
     async function getProduct() {
       try {
@@ -27,6 +32,7 @@ const Edit: NextPage = () => {
                 convertFromRaw(JSON.parse(response.data.items.contents)),
               ),
             );
+            console.log(editorState);
           } else {
             setEditorState(EditorState.createEmpty());
           }
@@ -96,18 +102,25 @@ const Edit: NextPage = () => {
           content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg"
         />
       </Head>
-      <Carousel>
-        {images.map((item) => (
-          <Image
-            key={item.original}
-            src={item.original}
-            alt="image"
-            width={1000}
-            height={600}
-            layout="responsive"
-          />
-        ))}
-      </Carousel>
+      <div
+        css={css`
+          margin-bottom: 1000px;
+        `}
+      >
+        <Carousel>
+          {images.map((item) => (
+            <Image
+              key={item.original}
+              src={item.original}
+              alt="image"
+              width={1000}
+              height={600}
+              layout="responsive"
+            />
+          ))}
+        </Carousel>
+      </div>
+
       {editorState !== null && (
         <CustomEditor
           editorState={editorState}

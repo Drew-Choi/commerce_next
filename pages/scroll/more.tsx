@@ -1,5 +1,5 @@
 import { products } from '@prisma/client';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -57,6 +57,8 @@ const MoreScroll = () => {
                 alt="image"
                 width={300}
                 height={200}
+                placeholder="blur"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOcfPJ/PQAHLgLcHWCcqQAAAABJRU5ErkJggg=="
               />
               <p>{item.price.toLocaleString('ko-KR')}</p>
             </div>
