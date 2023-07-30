@@ -1,3 +1,4 @@
+import { CATEGORY_MAP } from '@/constant/products';
 import { products } from '@prisma/client';
 import axios from 'axios';
 import Image from 'next/image';
@@ -61,6 +62,7 @@ const MoreScroll = () => {
                 blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOcfPJ/PQAHLgLcHWCcqQAAAABJRU5ErkJggg=="
               />
               <p>{item.price.toLocaleString('ko-KR')}</p>
+              <span>{CATEGORY_MAP[item.category_id - 1]}</span>
             </div>
           ))}
       </div>
