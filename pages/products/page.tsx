@@ -1,4 +1,4 @@
-import { CATEGORY_MAP } from '@/constant/products';
+import { CATEGORY_MAP, FILTERS } from '@/constant/products';
 import { Select } from '@mantine/core';
 import { products } from '@prisma/client';
 import axios from 'axios';
@@ -9,12 +9,14 @@ const MoreScroll = () => {
   const Take = 9;
   const [skip, setSkip] = useState<number>(0);
   const [products, setProducts] = useState<products[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState<string>();
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(
+    FILTERS[0].value,
+  );
 
   const getScrollProducts = async () => {
     try {
       const response = await axios.get(
-        `/api/get-more-scroll?skip=0&take=${Take}`,
+        `/api/get-more-scroll?skip=0&take=${Take}&category=${selectedFilter}`,
       );
 
       if (response.status === 200) {
@@ -27,7 +29,7 @@ const MoreScroll = () => {
 
   useEffect(() => {
     getScrollProducts();
-  }, []);
+  }, [selectedFilter]);
 
   const getMoreProductScroll = useCallback(async () => {
     const next = skip + Take;
@@ -49,9 +51,15 @@ const MoreScroll = () => {
   }, [skip, products]);
 
   return (
-    <div className="justify-center grid p-20 w-screen">
+    <div className="justify-center grid p-20 w-screen mb-3">
+      <div className="mb-5">
+        <Select
+          value={selectedFilter}
+          onChange={setSelectedFilter}
+          data={FILTERS}
+        />
+      </div>
       <div className="grid grid-cols-3 gap-5 text-center">
-        <Select value={value} onChange={setValue} data={[]} />;
         {products &&
           products.map((item) => (
             <div key={item.id}>
