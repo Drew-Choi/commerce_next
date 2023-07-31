@@ -1,4 +1,5 @@
 import { CATEGORY_MAP } from '@/constant/products';
+import { Select } from '@mantine/core';
 import { products } from '@prisma/client';
 import axios from 'axios';
 import Image from 'next/image';
@@ -8,6 +9,7 @@ const MoreScroll = () => {
   const Take = 9;
   const [skip, setSkip] = useState<number>(0);
   const [products, setProducts] = useState<products[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState<string>();
 
   const getScrollProducts = async () => {
     try {
@@ -49,6 +51,7 @@ const MoreScroll = () => {
   return (
     <div className="justify-center grid p-20 w-screen">
       <div className="grid grid-cols-3 gap-5 text-center">
+        <Select value={value} onChange={setValue} data={[]} />;
         {products &&
           products.map((item) => (
             <div key={item.id}>
